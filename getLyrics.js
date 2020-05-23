@@ -6,7 +6,6 @@ async function getLyrics(artist, songName) {
   artist = artist.replace(/\s+/g, "-").toLowerCase();
 
   const siteUrl = "https://genius.com/" + artist + "-" + songName + "-lyrics";
-  console.log(siteUrl);
   const fetchLyrics = async () => {
     const result = await axios.get(siteUrl);
     return cheerio.load(result.data);
