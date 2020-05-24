@@ -1,39 +1,75 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, FlatList, ScrollView } from "react-native";
 import getUserData from "./storage/getUserData";
 import getRefreshTokens from "./getRefreshTokens";
+import getLyrics from "./getLyrics";
 
 export default function App() {
   const [accessTokenAvailable, setAccessTokenAvailability] = useState(false);
+  const [artist, setArtist] = useState("");
+  const [songName, setSongName] = useState("");
+  const [lyrics, setLyrics] = useState("");
 
   useEffect(() => {
     async function fetchMyExpirationTime() {
       const tokenExpirationTime = await getUserData("expirationTime");
+      console.log(tokenExpirationTime);
+      await getRefreshTokens();
+
       if (!tokenExpirationTime || new Date().getTime() > tokenExpirationTime) {
-        await getRefreshTokens();
       } else {
         setAccessTokenAvailability(true);
       }
+      getSong();
     }
     fetchMyExpirationTime();
   }, []);
-  async function fetchMyToken() {
+
+  useEffect(() => {
+    async function fetchLyrics() {
+      const lyrics = await getLyrics(artist, songName);
+      setLyrics(lyrics);
+      console.log(lyrics);
+    }
+    fetchLyrics();
+  }, [artist, songName]);
+
+  async function getSong() {
     const accessToken = await getUserData("accessToken");
     console.log(accessToken);
+    const response = await fetch(
+      "https://api.spotify.com/v1/me/player/currently-playing",
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const respJson = await response.json();
+    setSongName(respJson["item"]["name"]);
+    setArtist(respJson["item"]["artists"][0]["name"]);
   }
-  fetchMyToken();
   return (
-    <View style={styles.container}>
-      <Text>Token is available:</Text>
-    </View>
+    <ScrollView style={styles.container}>
+      <View>
+        <Text style={{ paddingBottom: 20 }}>
+          {artist} - {songName}
+        </Text>
+        <Text>{lyrics}</Text>
+        <View style={{ paddingBottom: 50 }}></View>
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: 30,
+    paddingLeft: 30,
     flex: 1,
     backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    // alignItems: "center",
+    // justifyContent: "center",
   },
 });

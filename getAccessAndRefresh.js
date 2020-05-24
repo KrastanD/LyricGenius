@@ -27,10 +27,10 @@ export default getTokens = async () => {
       expires_in: expiresIn,
     } = responseJson;
 
-    const ExpirationTime = new Date().getTime() + expiresIn * 1000;
+    const expirationTime = new Date().getTime() + expiresIn;
     await setUserData("accessToken", accessToken);
     await setUserData("refreshToken", refreshToken);
-    await setUserData("expirationTime", ExpirationTime);
+    await setUserData("expirationTime", expirationTime);
   } catch (err) {
     console.error(err);
   }
