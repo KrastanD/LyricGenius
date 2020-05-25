@@ -3,24 +3,23 @@ import { StyleSheet, Text, View, FlatList, ScrollView } from "react-native";
 import getUserData from "./storage/getUserData";
 import getRefreshTokens from "./getRefreshTokens";
 import getLyrics from "./getLyrics";
+import useInterval from "./useInterval";
 
 export default function App() {
   const [artist, setArtist] = useState("");
   const [songName, setSongName] = useState("");
   const [lyrics, setLyrics] = useState("");
+  const [count, setCount] = useState(0);
 
-  useEffect(() => {
-    async function fetchMyExpirationTime() {
-      const tokenExpirationTime = await getUserData("expirationTime");
+  useInterval(async () => {
+    const tokenExpirationTime = await getUserData("expirationTime");
 
-      if (!tokenExpirationTime || Date.now() > tokenExpirationTime) {
-        await getRefreshTokens();
-      } else {
-        getSong();
-      }
+    if (!tokenExpirationTime || Date.now() > tokenExpirationTime) {
+      await getRefreshTokens();
     }
-    fetchMyExpirationTime();
-  }, []);
+    await getSong();
+    setCount(count + 1);
+  }, 1000);
 
   useEffect(() => {
     async function fetchLyrics() {
@@ -28,7 +27,7 @@ export default function App() {
       setLyrics(lyrics);
     }
     fetchLyrics();
-  }, [artist]);
+  }, [artist, songName]);
 
   async function getSong() {
     const accessToken = await getUserData("accessToken");
@@ -42,10 +41,15 @@ export default function App() {
       }
     );
     const respJson = await response.json();
-
-    setSongName(respJson["item"]["name"]);
-    setArtist(respJson["item"]["artists"][0]["name"]);
+    if (
+      respJson["item"]["name"] != songName ||
+      respJson["item"]["artists"][0]["name"] != artist
+    ) {
+      setSongName(respJson["item"]["name"]);
+      setArtist(respJson["item"]["artists"][0]["name"]);
+    }
   }
+
   return (
     <ScrollView style={styles.container}>
       <View>
