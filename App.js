@@ -29,10 +29,9 @@ export default function App() {
     async function fetchLyrics() {
       const lyrics = await getLyrics(artist, songName);
       setLyrics(lyrics);
-      console.log(lyrics);
     }
     fetchLyrics();
-  }, [artist, songName]);
+  }, [artist]);
 
   async function getSong() {
     const accessToken = await getUserData("accessToken");
