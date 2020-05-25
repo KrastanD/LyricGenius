@@ -7,6 +7,7 @@ export default async function getLyrics(artist, songName) {
   }
   songName = songName.replace(/ *\([^)]*\) */g, "");
   songName = songName.replace(/’/g, "");
+  songName = songName.replace(/'/g, "");
   songName = songName.replace(/ü/g, "u");
   songName = songName.replace(/ -/g, "");
   songName = songName.replace(/\s+/g, "-").toLowerCase();
@@ -15,13 +16,20 @@ export default async function getLyrics(artist, songName) {
   artist = artist.replace(/\s+/g, "-").toLowerCase();
 
   const siteUrl = "https://genius.com/" + artist + "-" + songName + "-lyrics";
-  console.log(siteUrl);
   const fetchLyrics = async () => {
-    const result = await axios.get(siteUrl);
+    var result;
+    try {
+      result = await axios.get(siteUrl);
+    } catch (err) {
+      return "Lyrics for this song were not found";
+    }
     return cheerio.load(result.data);
   };
 
   const $ = await fetchLyrics();
+  if ($ == "Lyrics for this song were not found") {
+    return "Lyrics for this song were not found";
+  }
   var lyrics = $("div.lyrics").text();
   lyrics = lyrics.trim();
   return lyrics;

@@ -5,7 +5,6 @@ import getRefreshTokens from "./getRefreshTokens";
 import getLyrics from "./getLyrics";
 
 export default function App() {
-  const [accessTokenAvailable, setAccessTokenAvailability] = useState(false);
   const [artist, setArtist] = useState("");
   const [songName, setSongName] = useState("");
   const [lyrics, setLyrics] = useState("");
@@ -13,14 +12,12 @@ export default function App() {
   useEffect(() => {
     async function fetchMyExpirationTime() {
       const tokenExpirationTime = await getUserData("expirationTime");
-      console.log(tokenExpirationTime);
-      await getRefreshTokens();
 
-      if (!tokenExpirationTime || new Date().getTime() > tokenExpirationTime) {
+      if (!tokenExpirationTime || Date.now() > tokenExpirationTime) {
+        await getRefreshTokens();
       } else {
-        setAccessTokenAvailability(true);
+        getSong();
       }
-      getSong();
     }
     fetchMyExpirationTime();
   }, []);
@@ -35,7 +32,6 @@ export default function App() {
 
   async function getSong() {
     const accessToken = await getUserData("accessToken");
-    console.log(accessToken);
     const response = await fetch(
       "https://api.spotify.com/v1/me/player/currently-playing",
       {
@@ -46,6 +42,7 @@ export default function App() {
       }
     );
     const respJson = await response.json();
+
     setSongName(respJson["item"]["name"]);
     setArtist(respJson["item"]["artists"][0]["name"]);
   }
@@ -66,6 +63,7 @@ const styles = StyleSheet.create({
   container: {
     paddingTop: 30,
     paddingLeft: 30,
+    paddingRight: 30,
     flex: 1,
     backgroundColor: "#fff",
     // alignItems: "center",

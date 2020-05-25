@@ -1,7 +1,7 @@
 import spotifyCredentials from "./secrets";
 import { encode as btoa } from "base-64";
 import getUserData from "./storage/getUserData";
-import getTokens from "./getAccessAndRefresh";
+import getTokens from "./getTokens";
 import setUserData from "./storage/setUserData";
 
 export default getRefreshTokens = async () => {
@@ -28,13 +28,13 @@ export default getRefreshTokens = async () => {
         refresh_token: newRefreshToken,
         expires_in: expiresIn,
       } = responseJson;
-
-      const expirationTime = new Date().getTime + expiresIn * 1000;
+      console.log(responseJson);
+      const expirationTime = Date.now() + expiresIn * 1000;
       await setUserData("accessToken", newAccessToken);
       if (newRefreshToken) {
         await setUserData("refreshToken", newRefreshToken);
       }
-      await setUserData("expirationTime", expirationTime);
+      await setUserData("expirationTime", expirationTime.toString());
     }
   } catch (err) {
     console.error(err);
