@@ -10,6 +10,7 @@ export default async function getLyrics(artist, songName) {
   songName = songName.replace(/'/g, "");
   songName = songName.replace(/ü/g, "u");
   songName = songName.replace(/ -/g, "");
+  songName = songName.replace(/\./g, "");
   songName = songName.replace(/\s+/g, "-").toLowerCase();
   artist = artist.replace(/\./g, "");
   artist = artist.replace(/ü/g, "u");
