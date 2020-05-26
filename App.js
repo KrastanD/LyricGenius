@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, FlatList, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ActivityIndicator,
+  ScrollView,
+} from "react-native";
 import getUserData from "./storage/getUserData";
 import getRefreshTokens from "./getRefreshTokens";
 import getLyrics from "./getLyrics";
 import useInterval from "./useInterval";
 
 export default function App() {
-  const [artist, setArtist] = useState("");
-  const [songName, setSongName] = useState("");
   const [lyrics, setLyrics] = useState("");
+  const [songAndArtist, setSongAndArtist] = useState(["", ""]);
   const [count, setCount] = useState(0);
 
   useInterval(async () => {
@@ -23,11 +28,12 @@ export default function App() {
 
   useEffect(() => {
     async function fetchLyrics() {
-      const lyrics = await getLyrics(artist, songName);
+      setLyrics("");
+      let lyrics = await getLyrics(songAndArtist[1], songAndArtist[0]);
       setLyrics(lyrics);
     }
     fetchLyrics();
-  }, [artist, songName]);
+  }, [songAndArtist]);
 
   async function getSong() {
     const accessToken = await getUserData("accessToken");
@@ -42,11 +48,13 @@ export default function App() {
     );
     const respJson = await response.json();
     if (
-      respJson["item"]["name"] != songName ||
-      respJson["item"]["artists"][0]["name"] != artist
+      respJson["item"]["name"] != songAndArtist[0] ||
+      respJson["item"]["artists"][0]["name"] != songAndArtist[1]
     ) {
-      setSongName(respJson["item"]["name"]);
-      setArtist(respJson["item"]["artists"][0]["name"]);
+      setSongAndArtist([
+        respJson["item"]["name"],
+        respJson["item"]["artists"][0]["name"],
+      ]);
     }
   }
 
@@ -54,9 +62,9 @@ export default function App() {
     <ScrollView style={styles.container}>
       <View>
         <Text style={{ paddingBottom: 20 }}>
-          {artist} - {songName}
+          {songAndArtist[1]} - {songAndArtist[0]}
         </Text>
-        <Text>{lyrics}</Text>
+        {lyrics ? <Text>{lyrics}</Text> : <ActivityIndicator size="large" />}
         <View style={{ paddingBottom: 50 }}></View>
       </View>
     </ScrollView>
