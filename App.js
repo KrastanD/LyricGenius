@@ -14,6 +14,7 @@ import useInterval from "./useInterval";
 export default function App() {
   const [lyrics, setLyrics] = useState("");
   const [songAndArtist, setSongAndArtist] = useState(["", ""]);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [count, setCount] = useState(0);
 
   useInterval(async () => {
@@ -32,21 +33,36 @@ export default function App() {
       let lyrics = await getLyrics(songAndArtist[1], songAndArtist[0]);
       setLyrics(lyrics);
     }
-    fetchLyrics();
-  }, [songAndArtist]);
+    if (isPlaying) {
+      fetchLyrics();
+    }
+  }, [songAndArtist, isPlaying]);
+
+  useEffect(() => {
+    if (!isPlaying) {
+      setLyrics("No currently playing song");
+    }
+  }, [isPlaying]);
 
   async function getSong() {
     const accessToken = await getUserData("accessToken");
-    const response = await fetch(
-      "https://api.spotify.com/v1/me/player/currently-playing",
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
+    let response;
+    try {
+      response = await fetch(
+        "https://api.spotify.com/v1/me/player/currently-playing",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+    } catch (err) {
+      setIsPlaying(false);
+    }
+
     const respJson = await response.json();
+    setIsPlaying(respJson["is_playing"]);
     if (
       respJson["item"]["name"] != songAndArtist[0] ||
       respJson["item"]["artists"][0]["name"] != songAndArtist[1]
