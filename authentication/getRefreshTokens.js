@@ -1,8 +1,8 @@
-import spotifyCredentials from "./secrets";
+import spotifyCredentials from "../secrets";
 import { encode as btoa } from "base-64";
-import getUserData from "./storage/getUserData";
+import getUserData from "../storage/getUserData";
 import getTokens from "./getTokens";
-import setUserData from "./storage/setUserData";
+import setUserData from "../storage/setUserData";
 
 export default getRefreshTokens = async () => {
   try {

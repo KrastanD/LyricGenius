@@ -1,7 +1,7 @@
 import { encode as btoa } from "base-64";
 import getAuthorizationCode from "./getAuthorizationCode";
-import spotifyCredentials from "./secrets";
-import setUserData from "./storage/setUserData";
+import spotifyCredentials from "../secrets";
+import setUserData from "../storage/setUserData";
 
 export default getTokens = async () => {
   console.log("getTokens");

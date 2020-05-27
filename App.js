@@ -7,7 +7,7 @@ import {
   ScrollView,
 } from "react-native";
 import getUserData from "./storage/getUserData";
-import getRefreshTokens from "./getRefreshTokens";
+import getRefreshTokens from "./authentication/getRefreshTokens";
 import getLyrics from "./getLyrics";
 import useInterval from "./useInterval";
 

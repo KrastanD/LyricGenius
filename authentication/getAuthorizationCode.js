@@ -1,5 +1,5 @@
 import * as AuthSession from "expo-auth-session";
-import spotifyCredentials from "./secrets";
+import spotifyCredentials from "../secrets";
 
 const scopesArr = ["user-read-currently-playing", "user-read-playback-state"];
 
