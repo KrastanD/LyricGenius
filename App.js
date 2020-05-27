@@ -8,8 +8,8 @@ import {
 } from "react-native";
 import getUserData from "./storage/getUserData";
 import getRefreshTokens from "./authentication/getRefreshTokens";
-import getLyrics from "./getLyrics";
-import useInterval from "./useInterval";
+import getLyrics from "./server/getLyrics";
+import useInterval from "./hooks/useInterval";
 
 export default function App() {
   const [lyrics, setLyrics] = useState("");
@@ -62,7 +62,13 @@ export default function App() {
       console.log(lyrics, songAndArtist, isPlaying, count);
       return;
     }
-    let respJson = await response.json();
+    let respJson;
+
+    try {
+      respJson = await response.json();
+    } catch (err) {
+      return;
+    }
 
     setIsPlaying(respJson["is_playing"]);
     try {
