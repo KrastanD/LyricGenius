@@ -58,19 +58,25 @@ export default function App() {
         }
       );
     } catch (err) {
-      setIsPlaying(false);
+      console.error(err);
+      console.log(lyrics, songAndArtist, isPlaying, count);
+      return;
     }
+    let respJson = await response.json();
 
-    const respJson = await response.json();
     setIsPlaying(respJson["is_playing"]);
-    if (
-      respJson["item"]["name"] != songAndArtist[0] ||
-      respJson["item"]["artists"][0]["name"] != songAndArtist[1]
-    ) {
-      setSongAndArtist([
-        respJson["item"]["name"],
-        respJson["item"]["artists"][0]["name"],
-      ]);
+    try {
+      if (
+        respJson["item"]["name"] != songAndArtist[0] ||
+        respJson["item"]["artists"][0]["name"] != songAndArtist[1]
+      ) {
+        setSongAndArtist([
+          respJson["item"]["name"],
+          respJson["item"]["artists"][0]["name"],
+        ]);
+      }
+    } catch (err) {
+      //TODO edit the if so this try catch is not necessary
     }
   }
 

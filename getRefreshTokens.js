@@ -5,7 +5,6 @@ import getTokens from "./getTokens";
 import setUserData from "./storage/setUserData";
 
 export default getRefreshTokens = async () => {
-  console.log("getRefreshTokens");
   try {
     const credsB64 = btoa(
       `${spotifyCredentials.CLIENT_ID}:${spotifyCredentials.CLIENT_SECRET}`
@@ -28,7 +27,6 @@ export default getRefreshTokens = async () => {
         refresh_token: newRefreshToken,
         expires_in: expiresIn,
       } = responseJson;
-      console.log(responseJson);
       const expirationTime = Date.now() + expiresIn * 1000;
       await setUserData("accessToken", newAccessToken);
       if (newRefreshToken) {
