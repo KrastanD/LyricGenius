@@ -11,6 +11,7 @@ web-build/
 web-report/
 secrets.js 
 
+apks/
 
 # macOS
 .DS_Store
