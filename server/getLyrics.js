@@ -20,6 +20,10 @@ export default async function getLyrics(artist, songName) {
 
   songName = songName.replace(/\./g, "");
 
+  //delete quotes
+  songName = songName.replace(/’/g, "");
+  songName = songName.replace(/'/g, "");
+
   //replace spaces with dashes
   songName = songName.replace(/\s+/g, "-").toLowerCase();
 
@@ -32,6 +36,7 @@ export default async function getLyrics(artist, songName) {
   artist = artist.replace(/\s+/g, "-").toLowerCase();
 
   const siteUrl = "https://genius.com/" + artist + "-" + songName + "-lyrics";
+  console.log(siteUrl);
   const fetchLyrics = async () => {
     var result;
     try {
