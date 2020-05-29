@@ -23,7 +23,7 @@
         "foregroundImage": "./assets/ic_launcher.png"
       },
       "package": "com.krastan.lyricgenius",
-      "versionCode": 1
+      "versionCode": "1.0.0"
     }
   }
 }
