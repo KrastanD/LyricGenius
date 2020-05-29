@@ -20,10 +20,23 @@ export default async function getLyrics(artist, songName) {
 
   songName = songName.replace(/\./g, "");
 
+  songName = songName.replace(/\,/g, "");
+
+  //delete quotes
+  songName = songName.replace(/’/g, "");
+  songName = songName.replace(/'/g, "");
+
+  //replace backslash with dash
+  songName = songName.replace(/\//g, "-");
+
   //replace spaces with dashes
   songName = songName.replace(/\s+/g, "-").toLowerCase();
 
+  //delete periods
   artist = artist.replace(/\./g, "");
+
+  //replace dollar sign with dash
+  artist = artist.replace(/\$/g, "-");
 
   //normalize songName to get rid of special characters and replace them with normal ones
   artist = artist.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
