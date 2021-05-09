@@ -4,7 +4,8 @@ import getUserData from "../storage/getUserData";
 import getTokens from "./getTokens";
 import setUserData from "../storage/setUserData";
 
-export default getRefreshTokens = async () => {
+const getRefreshTokens = async () => {
+  console.log("getRefreshTokens");
   try {
     const credsB64 = btoa(
       `${spotifyCredentials.CLIENT_ID}:${spotifyCredentials.CLIENT_SECRET}`
@@ -38,3 +39,5 @@ export default getRefreshTokens = async () => {
     console.error(err);
   }
 };
+
+export default getRefreshTokens;

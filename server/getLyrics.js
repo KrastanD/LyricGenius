@@ -1,10 +1,12 @@
 const axios = require("axios");
 const cheerio = require("react-native-cheerio");
 
-export default async function getLyrics(artist, songName) {
+async function getLyrics(artist, songName) {
   if (artist == "" || songName == "") {
     return "";
   }
+
+  //TODO figure out how to edit artist and songname at the same time
 
   //delete everything in parenthesis from the title including the parens
   songName = songName.replace(/ *\([^)]*\) */g, "");
@@ -18,8 +20,10 @@ export default async function getLyrics(artist, songName) {
   //replace ampersand with and
   songName = songName.replace(/&/g, "and");
 
+  //delete periods
   songName = songName.replace(/\./g, "");
 
+  //delete commas
   songName = songName.replace(/\,/g, "");
 
   //delete quotes
@@ -44,6 +48,9 @@ export default async function getLyrics(artist, songName) {
   //replace spaces with dashes
   artist = artist.replace(/\s+/g, "-").toLowerCase();
 
+  //replaces backslash with dash
+  artist = artist.replace(/\//g, "-");
+
   const siteUrl = "https://genius.com/" + artist + "-" + songName + "-lyrics";
   const fetchLyrics = async () => {
     var result;
@@ -63,3 +70,5 @@ export default async function getLyrics(artist, songName) {
   lyrics = lyrics.trim();
   return lyrics;
 }
+
+export default getLyrics;

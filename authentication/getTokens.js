@@ -1,12 +1,14 @@
 import { encode as btoa } from "base-64";
 import getAuthorizationCode from "./getAuthorizationCode";
 import spotifyCredentials from "../secrets";
+import * as AuthSession from "expo-auth-session";
 import setUserData from "../storage/setUserData";
 
-export default getTokens = async () => {
+const getTokens = async () => {
   console.log("getTokens");
   try {
     const authorizationCode = await getAuthorizationCode();
+    console.log(authorizationCode);
     const credsB64 = btoa(
       `${spotifyCredentials.CLIENT_ID}:${spotifyCredentials.CLIENT_SECRET}`
     );
@@ -34,3 +36,5 @@ export default getTokens = async () => {
     console.error(err);
   }
 };
+
+export default getTokens;

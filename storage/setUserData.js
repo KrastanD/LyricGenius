@@ -1,9 +1,11 @@
-import { AsyncStorage } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default setUserData = async (key, value) => {
+const setUserData = async (key, value) => {
   try {
     await AsyncStorage.setItem(key, value);
   } catch (err) {
     console.error(err);
   }
 };
+
+export default setUserData;
