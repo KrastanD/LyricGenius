@@ -4,7 +4,6 @@ import spotifyCredentials from "../secrets";
 import setUserData from "../storage/setUserData";
 
 export default getTokens = async () => {
-  console.log("getTokens");
   try {
     const authorizationCode = await getAuthorizationCode();
     const credsB64 = btoa(
